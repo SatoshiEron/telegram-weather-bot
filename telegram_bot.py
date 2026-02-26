@@ -1,3 +1,23 @@
+import threading
+import time
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+# Простой HTTP сервер для Render
+class SimpleHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+        self.wfile.write(b"Bot is running!")
+
+def run_http_server():
+    server = HTTPServer(('0.0.0.0', 10000), SimpleHandler)
+    server.serve_forever()
+
+# Запускаем HTTP сервер в отдельном потоке
+threading.Thread(target=run_http_server, daemon=True).start()
+print("📡 HTTP сервер запущен на порту 10000")
+
 import telebot
 import os
 import requests
